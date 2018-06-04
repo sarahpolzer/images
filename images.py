@@ -10,7 +10,7 @@ from PIL import Image
 from io import BytesIO
 
 
-hostnames = ['https://www.beyondexteriors.com']
+hostnames = 'https://www.beyondexteriors.com'
 
 def get_sitemap_locs(url):
     opens=requests.get(url)
@@ -27,7 +27,6 @@ def get_sitemap(hostname):
     urls = []
     for sitemap in sitemaps:
         urls += get_sitemap_locs(sitemap)
-    #print(urls)
     return urls
 
 def find_links(urls):
@@ -45,7 +44,6 @@ def find_links(urls):
 
 def retrieve_image_tags(all_links_list):
     all_image_tags = []
-    all_image_sources = []
     for link in all_links_list:
         try:
             content = requests.get(link).content
@@ -75,22 +73,25 @@ def getfilelengths(hostname):
     for source in allimagesources:
         r +=1 
         try:
-            data= requests.head(source)
-            length = (data.headers['Content-length'])/1000
-            im = Image.open(BytesIO(data))
-            size = im.size
+            data = requests.get(source)
+            length = data.headers['Content-length']
+            lengthkb = int(length)/1000
             sizedict.append({"id": r, 
                         "source": source,
-                        "size": length})
+                        "length": lengthkb})
         except:
             pass
-    print(sizedict)
     return sizedict
+ 
+def export_to_json(hostname):
+    data = getfilelengths(hostname)
+    with open ('jsonimages.json', 'w') as outfile:
+        json.dump(data, outfile)
 
 
     
     
         
-getfilelengths('https://www.beyondexteriors.com')
+export_to_json(hostnames)
 
 
