@@ -30,7 +30,7 @@ def get_sitemap(hostname):
     return urls
 
 def find_links(urls):
-    hostname = 'https://www.beyondexteriors.com'
+    #hostname = 'https://www.beyondexteriors.com'
     all_links_list = []
     for url in urls:
         opens2 = requests.get(url)
@@ -74,7 +74,7 @@ def getfilelengths(hostname):
         r +=1 
         try:
             data = requests.get(source)
-            length = data.headers['Content-length']
+            length = data.hea      ders['Content-length']
             lengthkb = int(length)/1000
             sizedict.append({"id": r, 
                         "source": source,
