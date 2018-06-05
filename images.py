@@ -6,11 +6,9 @@ import re
 import shutil
 import lxml
 import json
-from PIL import Image
-from io import BytesIO
 
 
-hostnames = 'https://www.beyondexteriors.com'
+hostname = 'https://www.beyondexteriors.com'
 
 def get_sitemap_locs(url):
     opens=requests.get(url)
@@ -74,7 +72,7 @@ def getfilelengths(hostname):
         r +=1 
         try:
             data = requests.get(source)
-            length = data.hea      ders['Content-length']
+            length = data.headers['Content-length']
             lengthkb = int(length)/1000
             sizedict.append({"id": r, 
                         "source": source,
@@ -88,10 +86,15 @@ def export_to_json(hostname):
     with open ('jsonimages.json', 'w') as outfile:
         json.dump(data, outfile)
 
+def export_to_csv(hostname):
+    data = getfilelengths(hostname)
+    f = open('imagescrape.csv', "w")
+    f.writelines("{0}\n".format(data[0].keys()).replace('dict_keys([',"").replace("'","").replace("])",""))
+    for x in data:
+        f.writelines("{}\n".format(x.values()).replace('dict_values([', "").replace("'","").replace("])", ""))
+    f.close()
 
+export_to_csv(hostname)
     
-    
-        
-export_to_json(hostnames)
 
 
